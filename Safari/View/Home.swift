@@ -18,7 +18,7 @@ struct Home: View {
         }
     }
     
-    
+    // MARK: - Top Header View
     @ViewBuilder
     func HeaderView() -> some View {
         VStack{
@@ -50,10 +50,10 @@ struct Home: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 150)
-                .padding(.bottom, -20)
+                .padding(.bottom, -40)
             
         }
-        .padding(15)
+        .padding([.horizontal, .top], 15)
         .padding(.top, safeArea.top)
         .background{
             Rectangle()
