@@ -286,18 +286,68 @@ struct DetailView: View {
                 }
                 .padding(.top, -20)
             }
+            .padding(.horizontal, 20)
+            .padding(.top, safeArea.top + 15)
+            .padding([.horizontal, .bottom], 15)
+            .background {
+                Rectangle()
+                    .fill(Color("PicoVoid"))
+                    .padding(.bottom, 80)
+            }
             
-            // 
+            
+            // MARK: - Contact Information
+            
+            GeometryReader { proxy in
+                /// For smaller devices Adoption
+                ViewThatFits {
+                    ContactInformation()
+                    ScrollView(.vertical,showsIndicators: false){
+                         ContactInformation()
+                    }
+                }
+                
+            }
         }
-        .padding(.horizontal, 20)
-        .padding(.top, safeArea.top + 15)
-        .padding([.horizontal, .bottom], 15)
-        .background {
-            Rectangle()
-                .fill(Color("PicoVoid"))
-                .padding(.bottom, 80)
-        }
+       
         
     }
     
+    @ViewBuilder
+    func ContactInformation()-> some View {
+        VStack(spacing: 15){
+            HStack{
+                InfoView(title:"Flight"  , subtitle: "AR 500")
+                InfoView(title:"Class"  , subtitle: "Business")
+                InfoView(title:"Aircraft"  , subtitle: "B 737 - 400")
+                InfoView(title:"Possibility"  , subtitle: "AR 580")
+            }
+        }
+        .padding(15)
+        .padding(.top, 20)
+    }
+    
+    
+    // MARK: - ContactView
+    @ViewBuilder
+    func ContactView()-> some View {
+        
+    }
+    
+    
+    // MARK: - Info
+    @ViewBuilder
+    func InfoView(title: String, subtitle: String)-> some  View {
+        VStack(alignment: .center, spacing: 4){
+            Text(title)
+                .font(.caption2)
+                .fontWeight(.semibold)
+                .foregroundColor(Color("PicoVoid").opacity(0.4))
+            Text(subtitle)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(Color("PicoVoid"))
+        }
+        .frame(maxWidth: .infinity)
+    }
 }
