@@ -322,6 +322,19 @@ struct DetailView: View {
                 InfoView(title:"Aircraft"  , subtitle: "B 737 - 400")
                 InfoView(title:"Possibility"  , subtitle: "AR 580")
             }
+            
+           ContactView(name: "Murphy Musokya", email: "murhpy.m@gmail.com", profile: "user1")
+                .padding(.top, 30)
+            ContactView(name: "Le Bon", email: "lebonbauma.devGmail.com", profile: "user2")
+            
+            
+            // MARK: - Home Screen Button
+            Button {
+                <#code#>
+            } label: {
+                <#code#>
+            }
+
         }
         .padding(15)
         .padding(.top, 20)
@@ -330,8 +343,27 @@ struct DetailView: View {
     
     // MARK: - ContactView
     @ViewBuilder
-    func ContactView()-> some View {
-        
+    func ContactView(name: String, email: String, profile: String)-> some View {
+        HStack{
+            VStack(alignment: .leading, spacing: 4) {
+                 Text(name)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color("PicoVoid"))
+                Text(email)
+                    .font(.callout)
+                    .foregroundColor(Color("PicoVoid").opacity(0.4))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Image(profile)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 45, height: 45)
+                .clipShape(Circle())
+             
+            
+        }
+        .padding(.horizontal, 15)
     }
     
     
