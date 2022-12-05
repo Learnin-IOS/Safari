@@ -20,9 +20,32 @@ struct Home: View {
     var body: some View {
         VStack(spacing: 0){
             HeaderView()
+                .overlay(alignment: .bottomTrailing, content: {
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(Color("PicoVoid").opacity(0.4))
+                            .frame(width: 40, height: 40)
+                            .background {
+                                Circle()
+                                    .fill(.white)
+                                    .shadow(color: Color("PicoVoid").opacity(0.35), radius: 5, x: 5, y: 5)
+                            }
+                    }
+                    .offset(x: -15, y: 15)
+
+                })
                 .zIndex(1)
             PaymentsCardsView()
                 .zIndex(0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            Color("CoastalBreeze").opacity(0.8)
+                .ignoresSafeArea()
         }
     }
     
@@ -67,7 +90,7 @@ struct Home: View {
             Rectangle()
                 .fill(.linearGradient(colors:[
                     Color("PicoVoid"),
-//                    Color("MazarineBlue"),
+                    Color("MazarineBlue"),
                     Color("BrightGreek"),
                     Color("ElectronBlue"),
                     Color("DarnerTailBlue")
@@ -163,6 +186,10 @@ struct Home: View {
                     }
                 })
         )
+        .background{
+            Color.white
+                .ignoresSafeArea()
+        }
     }
     
     // MARK: - Card View
