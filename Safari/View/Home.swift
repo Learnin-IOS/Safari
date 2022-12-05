@@ -325,15 +325,39 @@ struct DetailView: View {
             
            ContactView(name: "Murphy Musokya", email: "murhpy.m@gmail.com", profile: "user1")
                 .padding(.top, 30)
-            ContactView(name: "Le Bon", email: "lebonbauma.devGmail.com", profile: "user2")
+            ContactView(name: "Le Bon Bauma", email: "lebonbauma.devGmail.com", profile: "user2")
             
+            VStack(alignment: .leading,spacing: 4) {
+                Text("Total Price")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color("PicoVoid").opacity(0.4))
+                
+                Text("$1,536.00")
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color("PicoVoid"))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 20)
+            .padding(.leading, 15)
             
             // MARK: - Home Screen Button
             Button {
-                <#code#>
+                
             } label: {
-                <#code#>
+                Text("Go To Home Screen")
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 10)
+                    .background {
+                        Capsule()
+                            .fill(Color("PicoVoid").gradient)
+                    }
             }
+            .padding(.top, 15)
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            .padding(.bottom, safeArea.bottom )
 
         }
         .padding(15)
