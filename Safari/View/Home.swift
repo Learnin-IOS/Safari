@@ -116,6 +116,46 @@ struct Home: View {
                 .offset(y: offsetY)
                 .offset(y: currentIndex * -200.0)
                 
+                // Gradient View
+                Rectangle()
+                    .fill(.linearGradient(colors: [
+                        .clear,
+                        .clear,
+                        .clear,
+                        .clear,
+                        .white.opacity(0.3),
+                        .white.opacity(0.7),
+                        .white
+                    ], startPoint: .top, endPoint: .bottom))
+                    .allowsHitTesting(false)
+                /**
+                 Why?
+                    Since the rectangle is an overlay view, it will prevent all intersctions
+                        with the view below , so activating this modifier(allowHitsTesting(False)) will entirely disable
+                        the rectangle's interaction.
+                 **/
+                
+                
+                // MARK: - Purchase Button
+                
+                Button {
+                    
+                } label: {
+                    Text("Confirm $1,536.00")
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(Color("PicoVoid").gradient)
+                                
+                        )
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .padding(.bottom, safeArea.bottom ==  0 ? 15 : safeArea.bottom)
+                
             }
             .coordinateSpace(name: "SCROLL")
         }
@@ -143,8 +183,6 @@ struct Home: View {
         )
     }
     
-    
-    
     // MARK: - Card View
     @ViewBuilder
     func CardView(index: Int) -> some View {
@@ -170,6 +208,9 @@ struct Home: View {
         }
         .frame(height: 200)
         .zIndex(Double(sampleCard.count - index))
+        .onTapGesture {
+             print(index)
+        }
         
     }
 }
@@ -178,6 +219,18 @@ struct Home: View {
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        DetailView()
+    }
+}
+
+
+
+// MARK: - Detail View UI
+
+struct DetailView: View {
+    var body: some View{
+        VStack(spacong: 0){
+            
+        }
     }
 }
