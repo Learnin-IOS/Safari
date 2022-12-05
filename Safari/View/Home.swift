@@ -12,9 +12,17 @@ struct Home: View {
     // MARK: - View Bounds
     var size: CGSize
     var safeArea: EdgeInsets
+    
+
+    // MARK: - Gesture Properties
+    @State var offsetY: CGFloat = 0
+    @State var currentIndex: CGFloat = 0
     var body: some View {
         VStack(spacing: 0){
             HeaderView()
+                .zIndex(1)
+            PaymentsCardsView()
+                .zIndex(0)
         }
     }
     
@@ -83,6 +91,85 @@ struct Home: View {
                 .foregroundColor(.white.opacity(0.8))
         }
         .frame(maxWidth: .infinity)
+        
+    }
+    
+    
+    // MARK: - Payments
+    @ViewBuilder
+    func PaymentsCardsView() -> some View{
+        VStack{
+            Text("SELECT PAYMENT METHOD")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(Color("PicoVoid").opacity(0.4))
+                .padding(.vertical)
+            
+            GeometryReader{_ in
+                VStack(spacing: 0){
+                    ForEach(sampleCard.indices, id: \.self) { index in
+                        CardView(index: index)
+                        
+                    }
+                }
+                .padding(.horizontal, 30)
+                .offset(y: offsetY)
+                .offset(y: currentIndex * -200.0)
+                
+            }
+            .coordinateSpace(name: "SCROLL")
+        }
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture()
+                .onChanged({ value in
+                    // Decreasing Speed
+                    offsetY = value.translation.height * 0.3
+                }).onEnded({ value in
+                    let translation = value.translation.height
+                    withAnimation(.easeOut){
+                        // MARK: - Increase/Decrease Index Based on condition
+                        
+                        // we using 100 since the Card's heidght is 200 so half the height.
+                        if translation > 0  && translation > 100 && currentIndex > 0{
+                            currentIndex -= 1
+                        }
+                        if translation < 0 && -translation > 100 && currentIndex < CGFloat(sampleCard.count - 1) {
+                            currentIndex += 1
+                        }
+                        offsetY = .zero
+                    }
+                })
+        )
+    }
+    
+    
+    
+    // MARK: - Card View
+    @ViewBuilder
+    func CardView(index: Int) -> some View {
+        GeometryReader{ proxy in
+            let size = proxy.size
+            let minY = proxy.frame(in: .named("SCROLL")).minY
+            let progress = minY / size.height
+            let constrainedProgress = progress > 1 ? 1 : progress < 0 ? 0 : progress
+            
+            Image(sampleCard[index].cardImage)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size.width, height: size.height)
+                // Shadow
+                .shadow(color: .black.opacity(0.14), radius: 8, x: 6, y: 6)
+            
+                // Stacked cCard Animation
+                .rotation3DEffect(.init(degrees: constrainedProgress * 40.0), axis: (x: 1, y: 0, z: 0), anchor: .bottom)
+                .padding(.top,  progress * -150.0)
+            
+                // Moving Current Card to the Top
+                .offset(y: progress < 0 ? progress * 250 : 0)
+        }
+        .frame(height: 200)
+        .zIndex(Double(sampleCard.count - index))
         
     }
 }
