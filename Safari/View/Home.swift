@@ -57,8 +57,9 @@ struct Home: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(width: planeRect.width, height: planeRect.height)
                         .offset(x: planeRect.minX, y: planeRect.minY)
+                    ///
                         .onAppear{
-                            animator.initialPlanePoistion = rect 
+                            animator.initialPlanePoistion = rect
                         }
                     
                 }
@@ -219,6 +220,9 @@ struct Home: View {
             Color.white
                 .ignoresSafeArea()
         }
+        /// Applying 3D Rotation
+        .rotation3DEffect(.init(degrees: animator.startAnimantion ? -90 : 0), axis: (x: 1, y: 0, z: 0), anchor: .init(x: 0.5, y: 0.25))
+        .offset(y: animator.startAnimantion ? 100 : 0)
     }
     
     func buyTicket() {
