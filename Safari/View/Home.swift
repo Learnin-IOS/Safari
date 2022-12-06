@@ -13,6 +13,9 @@ struct Home: View {
     var size: CGSize
     var safeArea: EdgeInsets
     
+    
+    // MARK: - Animator state object
+    @StateObject var animator: Animator = .init()
 
     // MARK: - Gesture Properties
     @State var offsetY: CGFloat = 0
@@ -43,6 +46,24 @@ struct Home: View {
                 .zIndex(0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlayPreferenceValue(RectKey.self, { value in
+            if let anchor = value["PLANEBOUNDS"] {
+                GeometryReader{ proxy in
+                    // Extracting Rect form Anchor using Geomtry Reader that will extract CGRect from the Anchor
+                    let rect = proxy[anchor]
+                    let planeRect = animator.initialPlanePoistion
+                    Image("Airplane")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: planeRect.width, height: planeRect.height)
+                        .offset(x: planeRect.minX, y: planeRect.minY)
+                        .onAppear{
+                            animator.initialPlanePoistion = rect 
+                        }
+                    
+                }
+            }
+        })
         .background {
             Color("CoastalBreeze").opacity(0.8)
                 .ignoresSafeArea()
@@ -81,6 +102,11 @@ struct Home: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 150)
+            /// Hiding the original image
+                .opacity(0)
+                .anchorPreference(key: RectKey.self, value: .bounds, transform: { anchor in
+                    return ["PLANEBOUNDS": anchor]
+                })
                 .padding(.bottom, -40)
             
         }
@@ -97,6 +123,11 @@ struct Home: View {
                 ], startPoint: .top, endPoint: .bottom))
                 
         }
+        
+    ///  Applying  3D Rotation
+    
+        .rotation3DEffect(.init(degrees: animator.startAnimantion ? 90 : 0) , axis: (x: 1, y: 0, z: 0), anchor: .init(x: 0.5, y: 0.8))
+        .offset(y: animator.startAnimantion ? -100 : 0)
     }
     
     
@@ -143,9 +174,7 @@ struct Home: View {
                 
                 // MARK: - Purchase Button
                 
-                Button {
-                    
-                } label: {
+                Button(action: buyTicket){
                     Text("Confirm $1,536.00")
                         .font(.callout)
                         .fontWeight(.semibold)
@@ -192,6 +221,14 @@ struct Home: View {
         }
     }
     
+    func buyTicket() {
+        
+        /// Animating content
+        withAnimation(.easeOut(duration: 0.85)){
+            animator.startAnimantion = true
+        }
+    }
+    
     // MARK: - Card View
     @ViewBuilder
     func CardView(index: Int) -> some View {
@@ -234,5 +271,30 @@ struct Home_Previews: PreviewProvider {
 }
 
 
+// MARK: - Observable Object that holds all animation properties
+
+class Animator: ObservableObject{
+    // Animation Properties
+    @Published var startAnimantion: Bool = false
+    
+    /// initial iamge position
+    @Published var initialPlanePoistion: CGRect = .zero
+}
 
 
+
+// MARK: - Anchor Preference Key
+/*
+ Since the Flight image rotates when 3D animation is applied, we must first determine
+ it's precise location on the screen in order to add the smae image as overlay.
+ Using Anchor Preference, we can recover it's precise location on the screen 😎
+ */
+
+struct RectKey: PreferenceKey {
+    static var defaultValue: [String: Anchor<CGRect>] = [:]
+    static func reduce(value: inout [String : Anchor<CGRect>], nextValue: () -> [String : Anchor<CGRect>]) {
+        value.merge(nextValue()){$1}
+                    
+    }
+    
+}
