@@ -14,6 +14,7 @@ enum PaymentStatus: String,CaseIterable {
     case finished = "Purchased"
     
     var symbolImage: String {
+        
         switch self {
         case .started:
             return "wifi"

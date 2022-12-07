@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FlightDetailView: View {
+    
     var alignment: HorizontalAlignment = .leading
     var place: String
     var code: String
@@ -15,6 +16,7 @@ struct FlightDetailView: View {
     
     
     var body: some View{
+        
         VStack(alignment: alignment, spacing: 6) {
             Text(place)
                 .font(.caption)

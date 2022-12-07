@@ -16,7 +16,7 @@ struct Home: View {
     
     // MARK: - Animator state object
     @StateObject var animator: Animator = .init()
-
+    
     // MARK: - Gesture Properties
     @State var offsetY: CGFloat = 0
     @State var currentIndex: CGFloat = 0
@@ -40,7 +40,7 @@ struct Home: View {
                     }
                     .offset(x: -15, y: 15)
                     .offset(x: animator.startAnimantion ? 80 : 0 )
-
+                    
                 })
                 .zIndex(1)
             PaymentsCardsView()
@@ -49,7 +49,7 @@ struct Home: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(content: {
             ZStack(alignment: .bottom){
-                 // Cloud View
+                // Cloud View
                 ZStack{
                     if animator.showClouds {
                         Group{
@@ -144,15 +144,15 @@ struct Home: View {
     @ViewBuilder
     func HeaderView() -> some View {
         VStack{
-                Image("logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-//                    .frame(width: size.width * 0.4)
-                    .frame(height: 50)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            Image("logo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            //                    .frame(width: size.width * 0.4)
+                .frame(height: 50)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack{
-               FlightDetailView(place: "Nairobi", code: "NBO", timing: "04 Dec, 23:15")
+                FlightDetailView(place: "Nairobi", code: "NBO", timing: "04 Dec, 23:15")
                 
                 VStack(spacing: 8){
                     Image(systemName: "chevron.right")
@@ -166,7 +166,7 @@ struct Home: View {
                 FlightDetailView(alignment: .trailing, place: "Paris", code: "CDG", timing: "05 Dec, 05:50 + 1")
             }
             .padding(.top, 20)
-
+            
             // MARK: - Airplane Image View
             Image("Airplane")
                 .resizable()
@@ -191,11 +191,11 @@ struct Home: View {
                     Color("ElectronBlue"),
                     Color("DarnerTailBlue")
                 ], startPoint: .top, endPoint: .bottom))
-                
+            
         }
         
-    ///  Applying  3D Rotation
-    
+        ///  Applying  3D Rotation
+        
         .rotation3DEffect(.init(degrees: animator.startAnimantion ? 90 : 0) , axis: (x: 1, y: 0, z: 0), anchor: .init(x: 0.5, y: 0.8))
         .offset(y: animator.startAnimantion ? -100 : 0)
     }
@@ -236,9 +236,9 @@ struct Home: View {
                     .allowsHitTesting(false)
                 /**
                  Why?
-                    Since the rectangle is an overlay view, it will prevent all intersctions
-                        with the view below , so activating this modifier(allowHitsTesting(False)) will entirely disable
-                        the rectangle's interaction.
+                 Since the rectangle is an overlay view, it will prevent all intersctions
+                 with the view below , so activating this modifier(allowHitsTesting(False)) will entirely disable
+                 the rectangle's interaction.
                  **/
                 
                 
@@ -254,7 +254,7 @@ struct Home: View {
                         .background(
                             Capsule()
                                 .fill(Color("PicoVoid").gradient)
-                                
+                            
                         )
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
@@ -323,20 +323,20 @@ struct Home: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: size.width, height: size.height)
-                // Shadow
+            // Shadow
                 .shadow(color: .black.opacity(0.14), radius: 8, x: 6, y: 6)
             
-                // Stacked cCard Animation
+            // Stacked cCard Animation
                 .rotation3DEffect(.init(degrees: constrainedProgress * 40.0), axis: (x: 1, y: 0, z: 0), anchor: .bottom)
                 .padding(.top,  progress * -150.0)
             
-                // Moving Current Card to the Top
+            // Moving Current Card to the Top
                 .offset(y: progress < 0 ? progress * 250 : 0)
         }
         .frame(height: 200)
         .zIndex(Double(sampleCard.count - index))
         .onTapGesture {
-             print(index)
+            print(index)
         }
         
     }
@@ -390,7 +390,7 @@ struct Home: View {
                     .shadow(color: Color("PicoVoid").opacity(0.1) ,radius: 5, x:5, y:5)
                     .shadow(color: Color("PicoVoid").opacity(0.1) ,radius: 5, x:-5, y:-5)
                     .scaleEffect(1.25)
-                 
+                
                 Circle()
                     .fill(.white)
                     .shadow(color: Color("PicoVoid").opacity(0.1) ,radius: 5, x: 5, y: 5)
@@ -426,7 +426,7 @@ struct Home: View {
         })
         .padding(.bottom, size.height * 0.15)
     }
-
+    
 }
 
 
@@ -439,12 +439,12 @@ struct Home_Previews: PreviewProvider {
 
 
 // MARK: -  Cloud View
- 
+
 struct CloudView: View{
     var delay: Double
     var size: CGSize
     @State private var moveCloud: Bool = false
-         
+    
     var body: some View {
         ZStack {
             Image("Cloud")
@@ -452,7 +452,7 @@ struct CloudView: View{
                 .aspectRatio(contentMode: .fit)
                 .frame(width: size.width * 3)
                 .offset(x: moveCloud ? -size.width * 2 : size.width * 2)
-             
+            
         }
         .onAppear{
             /// Duration  = speed of the movement of the clouds
@@ -502,7 +502,7 @@ struct RectKey: PreferenceKey {
     static var defaultValue: [String: Anchor<CGRect>] = [:]
     static func reduce(value: inout [String : Anchor<CGRect>], nextValue: () -> [String : Anchor<CGRect>]) {
         value.merge(nextValue()){$1}
-                    
+        
     }
     
 }

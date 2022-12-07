@@ -14,6 +14,11 @@
 		8F1B842E293CEC1E002F664D /* SafariTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1B842D293CEC1E002F664D /* SafariTests.swift */; };
 		8F1B8438293CEC1E002F664D /* SafariUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1B8437293CEC1E002F664D /* SafariUITests.swift */; };
 		8F1B843A293CEC1E002F664D /* SafariUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1B8439293CEC1E002F664D /* SafariUITestsLaunchTests.swift */; };
+		8F1B8448293D1654002F664D /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1B8447293D1654002F664D /* Home.swift */; };
+		8F1B844B293D6937002F664D /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1B844A293D6937002F664D /* Card.swift */; };
+		8F43006B293FF33B002918B9 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F43006A293FF33B002918B9 /* DetailView.swift */; };
+		8F43006D293FF3B4002918B9 /* FlightDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F43006C293FF3B4002918B9 /* FlightDetailView.swift */; };
+		8F43006F29400A13002918B9 /* PaymentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F43006E29400A13002918B9 /* PaymentStatus.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +49,11 @@
 		8F1B8433293CEC1E002F664D /* SafariUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SafariUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F1B8437293CEC1E002F664D /* SafariUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariUITests.swift; sourceTree = "<group>"; };
 		8F1B8439293CEC1E002F664D /* SafariUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8F1B8447293D1654002F664D /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		8F1B844A293D6937002F664D /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		8F43006A293FF33B002918B9 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		8F43006C293FF3B4002918B9 /* FlightDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlightDetailView.swift; sourceTree = "<group>"; };
+		8F43006E29400A13002918B9 /* PaymentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +104,8 @@
 		8F1B841B293CEC19002F664D /* Safari */ = {
 			isa = PBXGroup;
 			children = (
+				8F1B8449293D691B002F664D /* Model */,
+				8F1B8446293D1609002F664D /* View */,
 				8F1B841C293CEC19002F664D /* SafariApp.swift */,
 				8F1B841E293CEC19002F664D /* ContentView.swift */,
 				8F1B8420293CEC1E002F664D /* Assets.xcassets */,
@@ -125,6 +137,25 @@
 				8F1B8439293CEC1E002F664D /* SafariUITestsLaunchTests.swift */,
 			);
 			path = SafariUITests;
+			sourceTree = "<group>";
+		};
+		8F1B8446293D1609002F664D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8F1B8447293D1654002F664D /* Home.swift */,
+				8F43006A293FF33B002918B9 /* DetailView.swift */,
+				8F43006C293FF3B4002918B9 /* FlightDetailView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8F1B8449293D691B002F664D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8F1B844A293D6937002F664D /* Card.swift */,
+				8F43006E29400A13002918B9 /* PaymentStatus.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,7 +289,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F1B841F293CEC19002F664D /* ContentView.swift in Sources */,
+				8F43006F29400A13002918B9 /* PaymentStatus.swift in Sources */,
+				8F1B8448293D1654002F664D /* Home.swift in Sources */,
 				8F1B841D293CEC19002F664D /* SafariApp.swift in Sources */,
+				8F43006B293FF33B002918B9 /* DetailView.swift in Sources */,
+				8F1B844B293D6937002F664D /* Card.swift in Sources */,
+				8F43006D293FF3B4002918B9 /* FlightDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

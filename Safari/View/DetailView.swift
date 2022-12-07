@@ -41,7 +41,7 @@ struct DetailView: View {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .fill(.white.opacity(0.1)))
                 HStack{
-                   FlightDetailView(place: "Nairobi", code: "NBO", timing: "04 Dec, 23:15")
+                    FlightDetailView(place: "Nairobi", code: "NBO", timing: "04 Dec, 23:15")
                     
                     VStack(spacing: 8){
                         Image(systemName: "chevron.right")
@@ -82,7 +82,7 @@ struct DetailView: View {
                 ViewThatFits {
                     ContactInformation()
                     ScrollView(.vertical,showsIndicators: false){
-                         ContactInformation()
+                        ContactInformation()
                     }
                 }
                 .offset(y: animator.showFinalView ? 0 : size.height)
@@ -91,7 +91,7 @@ struct DetailView: View {
         }
         
         .animation(.easeInOut(duration: animator.showFinalView ? 0.7 : 0.3).delay(animator.showFinalView ? 0.7 : 0), value: animator.showFinalView)
-       
+        
         
     }
     
@@ -105,7 +105,7 @@ struct DetailView: View {
                 InfoView(title:"Possibility"  , subtitle: "AR 580")
             }
             
-           ContactView(name: "Murphy Musokya", email: "murhpy.m@gmail.com", profile: "user1")
+            ContactView(name: "Murphy Musokya", email: "murhpy.m@gmail.com", profile: "user1")
                 .padding(.top, 30)
             ContactView(name: "Le Bon Bauma", email: "lebonbauma.devGmail.com", profile: "user2")
             
@@ -138,7 +138,7 @@ struct DetailView: View {
             .padding(.top, 15)
             .frame(maxHeight: .infinity, alignment: .bottom)
             .padding(.bottom, safeArea.bottom )
-
+            
         }
         .padding(15)
         .padding(.top, 20)
@@ -150,7 +150,7 @@ struct DetailView: View {
     func ContactView(name: String, email: String, profile: String)-> some View {
         HStack{
             VStack(alignment: .leading, spacing: 4) {
-                 Text(name)
+                Text(name)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("PicoVoid"))
                 Text(email)
@@ -164,7 +164,7 @@ struct DetailView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 45, height: 45)
                 .clipShape(Circle())
-             
+            
             
         }
         .padding(.horizontal, 15)
