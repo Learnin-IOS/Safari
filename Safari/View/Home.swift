@@ -75,9 +75,14 @@ struct Home: View {
                 }
             }
         })
+        /// Whenever the final view shows up disabling the actions on the Overlayed View
+        .allowsHitTesting(!animator.showFinalView)
         .background{
-            DetailView(size: size, safeArea: safeArea)
-                .environmentObject(animator)
+            /// Safety check
+            if animator.startAnimantion{
+                DetailView(size: size, safeArea: safeArea)
+                    .environmentObject(animator)
+            }
         }
         .overlayPreferenceValue(RectKey.self, { value in
             if let anchor = value["PLANEBOUNDS"] {
@@ -98,11 +103,13 @@ struct Home: View {
                         .offset(x: planeRect.minX, y: planeRect.minY)
                     /// Moving plane bit down to look like it's center the 3d animation is happening
                         .offset(y: animator.startAnimantion ? 40 : 0)
+                        .scaleEffect(animator.showFinalView ? 0.9 : 1)
+                        .offset(y: animator.showFinalView ? 50 : 0)
                     
                         .onAppear{
                             animator.initialPlanePoistion = rect
                         }
-                        .animation(.easeInOut(duration: animationStatus ? 3.5 : 2.5 ), value: animationStatus)
+                        .animation(.easeInOut(duration: animationStatus ? 3.5 : 1.5 ), value: animationStatus)
                     
                 }
             }
@@ -282,6 +289,7 @@ struct Home: View {
             Color.white
                 .ignoresSafeArea()
         }
+        .clipped()
         /// Applying 3D Rotation
         .rotation3DEffect(.init(degrees: animator.startAnimantion ? -90 : 0), axis: (x: 1, y: 0, z: 0), anchor: .init(x: 0.5, y: 0.25))
         .offset(y: animator.startAnimantion ? 100 : 0)
@@ -448,7 +456,7 @@ struct CloudView: View{
         }
         .onAppear{
             /// Duration  = speed of the movement of the clouds
-            withAnimation(.easeInOut(duration: 6.5).delay(delay)) {
+            withAnimation(.easeInOut(duration: 5.5).delay(delay)) {
                 moveCloud.toggle()
             }
         }
