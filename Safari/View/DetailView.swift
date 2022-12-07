@@ -11,6 +11,7 @@ struct DetailView: View {
     
     var size: CGSize
     var safeArea: EdgeInsets
+    @EnvironmentObject var animator: Animator
     var body: some View{
         VStack {
             VStack(spacing: 0) {
@@ -63,11 +64,14 @@ struct DetailView: View {
             .padding(.horizontal, 20)
             .padding(.top, safeArea.top + 15)
             .padding([.horizontal, .bottom], 15)
+            .offset(y: animator.showFinalView ? 0 : 300)
             .background {
                 Rectangle()
                     .fill(Color("PicoVoid"))
+                    .scaleEffect(y: animator.showFinalView ? 1 : 0.001, anchor: .top)
                     .padding(.bottom, 80)
             }
+            .clipped()
             
             
             // MARK: - Contact Information
@@ -80,9 +84,12 @@ struct DetailView: View {
                          ContactInformation()
                     }
                 }
+                .offset(y: animator.showFinalView ? 0 : size.height)
                 
             }
         }
+        
+        .animation(.easeInOut(duration: animator.showFinalView ? 1 : 0.3).delay(animator.showFinalView ? 1 : 0), value: animator.showFinalView)
        
         
     }
