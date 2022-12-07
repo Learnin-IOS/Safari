@@ -21,6 +21,7 @@ struct DetailView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 100)
+                        .padding(.top, 10)
                     
                     
                     Text("Your order has been submitted")
@@ -89,7 +90,7 @@ struct DetailView: View {
             }
         }
         
-        .animation(.easeInOut(duration: animator.showFinalView ? 1 : 0.3).delay(animator.showFinalView ? 1 : 0), value: animator.showFinalView)
+        .animation(.easeInOut(duration: animator.showFinalView ? 0.7 : 0.3).delay(animator.showFinalView ? 0.7 : 0), value: animator.showFinalView)
        
         
     }
