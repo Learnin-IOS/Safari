@@ -123,9 +123,7 @@ struct DetailView: View {
             .padding(.leading, 15)
             
             // MARK: - Home Screen Button
-            Button {
-                
-            } label: {
+            Button (action: resettingAnimationAndView) {
                 Text("Go To Home Screen")
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
@@ -186,6 +184,24 @@ struct DetailView: View {
                 .foregroundColor(Color("PicoVoid"))
         }
         .frame(maxWidth: .infinity)
+    }
+    
+    
+    /// Resetting Animation
+    func resettingAnimationAndView(){
+        animator.currentPaymentStatus = .started
+        animator.showClouds = false
+        withAnimation(.easeInOut(duration: 0.3)) {
+            animator.showFinalView = false
+        }
+        animator.ringAnimation = [false, false]
+        animator.showLoadingView = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            withAnimation(.easeInOut){
+                animator.startAnimantion = false
+            }
+        }
     }
 }
 struct DetailView_Previews: PreviewProvider {
