@@ -71,9 +71,14 @@ struct Home: View {
                 if animator.showLoadingView {
                     BackgroundView()
                         .transition(.scale)
+                        .opacity(animator.showFinalView ? 0 : 1)
                 }
             }
         })
+        .background{
+            DetailView(size: size, safeArea: safeArea)
+                .environmentObject(animator)
+        }
         .overlayPreferenceValue(RectKey.self, { value in
             if let anchor = value["PLANEBOUNDS"] {
                 GeometryReader{ proxy in
@@ -81,14 +86,15 @@ struct Home: View {
                     let rect = proxy[anchor]
                     let planeRect = animator.initialPlanePoistion
                     let status = animator.currentPaymentStatus
-                    let animationStatus = status == .finished
+                    /// Reseting plane's position when final view appears
+                    let animationStatus = status == .finished && !animator.showFinalView
                     Image("Airplane")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: planeRect.width, height: planeRect.height)
                     /// Flight Movement Animation
                         .rotationEffect(.init(degrees: animationStatus ? -10 : 0))
-                        .shadow(color: Color("PicoVoid").opacity(0.25), radius: 1, x: animationStatus ? -400 :0, y: animationStatus ? 170 : 0)
+                        .shadow(color: Color("PicoVoid").opacity(0.25), radius: 1, x: status == .finished ? -400 :0, y: status == .finished ? 170 : 0)
                         .offset(x: planeRect.minX, y: planeRect.minY)
                     /// Moving plane bit down to look like it's center the 3d animation is happening
                         .offset(y: animator.startAnimantion ? 40 : 0)
@@ -116,6 +122,13 @@ struct Home: View {
         .onChange(of: animator.currentPaymentStatus) { newValue in
             if newValue == .finished {
                 animator.showClouds = true
+                /// Activating final view after some time
+                DispatchQueue.main.asyncAfter(deadline: . now() + 5) {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        animator.showFinalView = true
+                    }
+                }
+                
             }
         }
     }
@@ -461,6 +474,9 @@ class Animator: ObservableObject{
     
     // CloudView Status
     @Published var showClouds: Bool = false
+    
+    // Final View status
+    @Published var showFinalView: Bool = false
     
     
 }
