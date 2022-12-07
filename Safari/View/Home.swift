@@ -39,6 +39,7 @@ struct Home: View {
                             }
                     }
                     .offset(x: -15, y: 15)
+                    .offset(x: animator.startAnimantion ? 80 : 0 )
 
                 })
                 .zIndex(1)
@@ -46,6 +47,28 @@ struct Home: View {
                 .zIndex(0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .hidden()
+        .background(content: {
+            ZStack(alignment: .bottom){
+                 // Cloud View
+                /// Multiple Clouds for better animation
+                CloudView(delay: 1, size: size)
+                    .offset(y: size.height * -0.1)
+                CloudView(delay: 0, size: size)
+                    .offset(y: size.height * 0.3)
+                CloudView(delay: 2.2, size: size)
+                    .offset(y: size.height * -0.5)
+                CloudView(delay: 2.5, size: size)
+                    .offset(y: size.height * 0.2)
+                CloudView(delay: 2.5, size: size)
+                
+                
+                if animator.showLoadingView {
+                    BackgroundView()
+                        .transition(.scale)
+                }
+            }
+        })
         .overlayPreferenceValue(RectKey.self, { value in
             if let anchor = value["PLANEBOUNDS"] {
                 GeometryReader{ proxy in
@@ -57,13 +80,20 @@ struct Home: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(width: planeRect.width, height: planeRect.height)
                         .offset(x: planeRect.minX, y: planeRect.minY)
-                    ///
+                    /// Moving plane bit down to look like it's center the 3d animation is happening
+                        .offset(y: animator.startAnimantion ? 40 : 0)
+                    
                         .onAppear{
                             animator.initialPlanePoistion = rect
                         }
                     
                 }
             }
+        })
+        /// One OverLayed over the Airplane
+        .overlay(content: {
+            CloudView(delay: 2.2, size: size)
+                .offset(y: size.height * -0.25)
         })
         .background {
             Color("CoastalBreeze").opacity(0.8)
@@ -231,6 +261,13 @@ struct Home: View {
         withAnimation(.easeOut(duration: 0.85)){
             animator.startAnimantion = true
         }
+        
+        /// Showing Loading View  after some time
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+            withAnimation(.easeOut(duration: 0.7)) {
+                animator.showLoadingView = true
+            }
+        }
     }
     
     // MARK: - Card View
@@ -263,6 +300,92 @@ struct Home: View {
         }
         
     }
+    
+    
+    // MARK: - Background loading view with ring animation
+    @ViewBuilder
+    func BackgroundView() -> some View{
+        
+        VStack{
+            /// Payment Status
+            
+            VStack(spacing: 0){
+                ForEach(PaymentStatus.allCases, id: \.rawValue) { status in
+                    
+                    Text(status.rawValue)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color("PicoVoid").opacity(0.2))
+                        .frame(height: 30)
+                }
+                
+            }
+            .offset(y: animator.currentPaymentStatus == .started ? -30 :
+                        animator.currentPaymentStatus == .finished ? -60 : 0)
+            .frame(height: 30, alignment: .top)
+            .clipped()
+            .zIndex(1)
+            
+            ZStack{
+                
+                //Rings
+                /// Ring 1
+                Circle()
+                    .fill(Color("CoastalBreeze"))
+                    .shadow(color: .white.opacity(0.45) ,radius: 5, x:5, y:5)
+                    .shadow(color: .white.opacity(0.45) ,radius: 5, x:-5, y:-5)
+                    .scaleEffect(animator.ringAnimation[0] ? 5 : 1)
+                    .opacity(animator.ringAnimation[0] ? 0 : 1 )
+                
+                /// Ring 2
+                Circle()
+                    .fill(Color("CoastalBreeze"))
+                    .shadow(color: .white.opacity(0.45) ,radius: 5, x:5, y:5)
+                    .shadow(color: .white.opacity(0.45) ,radius: 5, x:-5, y:-5)
+                    .scaleEffect(animator.ringAnimation[1] ? 5 : 1)
+                    .opacity(animator.ringAnimation[1] ? 0 : 1 )
+                
+                Circle()
+                    .fill(Color("CoastalBreeze"))
+                    .shadow(color: Color("PicoVoid").opacity(0.1) ,radius: 5, x:5, y:5)
+                    .shadow(color: Color("PicoVoid").opacity(0.1) ,radius: 5, x:-5, y:-5)
+                    .scaleEffect(1.25)
+                 
+                Circle()
+                    .fill(.white)
+                    .shadow(color: Color("PicoVoid").opacity(0.1) ,radius: 5, x: 5, y: 5)
+                
+                Image(systemName: animator.currentPaymentStatus.symbolImage)
+                    .font(.largeTitle)
+                    .foregroundColor(Color("PicoVoid").opacity(0.3))
+            }
+            .frame(width: 80, height: 80)
+            .padding(.top, 20)
+            .zIndex(0)
+        }
+        // Using timer to simulate Loading  Effect
+        .onReceive(Timer.publish(every: 2.3, on: .main, in: .common).autoconnect()) { _ in
+            withAnimation(.easeOut(duration: 0.3)) {
+                if animator.currentPaymentStatus == .initiated{
+                    animator.currentPaymentStatus = .started
+                } else {
+                    animator.currentPaymentStatus = .finished
+                }
+            }
+        }
+        .onAppear(perform: {
+            withAnimation(.linear(duration: 2.5).repeatForever(autoreverses: false)) {
+                animator.ringAnimation[0] = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35){
+                withAnimation(.linear(duration: 2.5).repeatForever(autoreverses: false)) {
+                    animator.ringAnimation[1] = true
+                }
+            }
+        })
+        .padding(.bottom, size.height * 0.15)
+    }
 
 }
 
@@ -275,14 +398,51 @@ struct Home_Previews: PreviewProvider {
 }
 
 
+// MARK: -  Cloud View
+ 
+struct CloudView: View{
+    var delay: Double
+    var size: CGSize
+    @State private var moveCloud: Bool = false
+         
+    var body: some View {
+        ZStack {
+            Image("Cloud")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size.width * 3)
+                .offset(x: moveCloud ? -size.width * 2 : size.width * 2)
+             
+        }
+        .onAppear{
+            /// Duration  = speed of the movement of the clouds
+            withAnimation(.easeInOut(duration: 6.5).delay(delay)) {
+                moveCloud.toggle()
+            }
+        }
+    }
+}
+
+
 // MARK: - Observable Object that holds all animation properties
 
 class Animator: ObservableObject{
     // Animation Properties
     @Published var startAnimantion: Bool = false
     
-    /// initial iamge position
+    // Initial image position
     @Published var initialPlanePoistion: CGRect = .zero
+    @Published var currentPaymentStatus: PaymentStatus = .initiated
+    
+    // Rings Status
+    @Published var ringAnimation : [Bool] = [false, false]
+    
+    // Loding Status
+    @Published var showLoadingView: Bool = false
+    
+    // 
+    
+    
 }
 
 
