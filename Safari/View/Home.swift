@@ -47,21 +47,26 @@ struct Home: View {
                 .zIndex(0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .hidden()
         .background(content: {
             ZStack(alignment: .bottom){
                  // Cloud View
-                /// Multiple Clouds for better animation
-                CloudView(delay: 1, size: size)
-                    .offset(y: size.height * -0.1)
-                CloudView(delay: 0, size: size)
-                    .offset(y: size.height * 0.3)
-                CloudView(delay: 2.2, size: size)
-                    .offset(y: size.height * -0.5)
-                CloudView(delay: 2.5, size: size)
-                    .offset(y: size.height * 0.2)
-                CloudView(delay: 2.5, size: size)
-                
+                ZStack{
+                    if animator.showClouds {
+                        Group{
+                            /// Multiple Clouds for better animation
+                            CloudView(delay: 1, size: size)
+                                .offset(y: size.height * -0.1)
+                            CloudView(delay: 0, size: size)
+                                .offset(y: size.height * 0.3)
+                            CloudView(delay: 2.2, size: size)
+                                .offset(y: size.height * -0.5)
+                            CloudView(delay: 2.5, size: size)
+                                .offset(y: size.height * 0.2)
+                            CloudView(delay: 2.5, size: size)
+                        }
+                    }
+                }
+                .frame(maxHeight: .infinity)
                 
                 if animator.showLoadingView {
                     BackgroundView()
@@ -75,10 +80,15 @@ struct Home: View {
                     // Extracting Rect form Anchor using Geomtry Reader that will extract CGRect from the Anchor
                     let rect = proxy[anchor]
                     let planeRect = animator.initialPlanePoistion
+                    let status = animator.currentPaymentStatus
+                    let animationStatus = status == .finished
                     Image("Airplane")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: planeRect.width, height: planeRect.height)
+                    /// Flight Movement Animation
+                        .rotationEffect(.init(degrees: animationStatus ? -10 : 0))
+                        .shadow(color: Color("PicoVoid").opacity(0.25), radius: 1, x: animationStatus ? -400 :0, y: animationStatus ? 170 : 0)
                         .offset(x: planeRect.minX, y: planeRect.minY)
                     /// Moving plane bit down to look like it's center the 3d animation is happening
                         .offset(y: animator.startAnimantion ? 40 : 0)
@@ -86,18 +96,27 @@ struct Home: View {
                         .onAppear{
                             animator.initialPlanePoistion = rect
                         }
+                        .animation(.easeInOut(duration: animationStatus ? 3.5 : 2.5 ), value: animationStatus)
                     
                 }
             }
         })
         /// One OverLayed over the Airplane
         .overlay(content: {
-            CloudView(delay: 2.2, size: size)
-                .offset(y: size.height * -0.25)
+            if animator.showClouds {
+                CloudView(delay: 2.2, size: size)
+                    .offset(y: size.height * -0.25)
+            }
         })
         .background {
             Color("CoastalBreeze").opacity(0.8)
                 .ignoresSafeArea()
+        }
+        // Toogle Cloud View whenever status changed to finished
+        .onChange(of: animator.currentPaymentStatus) { newValue in
+            if newValue == .finished {
+                animator.showClouds = true
+            }
         }
     }
     
@@ -440,7 +459,8 @@ class Animator: ObservableObject{
     // Loding Status
     @Published var showLoadingView: Bool = false
     
-    // 
+    // CloudView Status
+    @Published var showClouds: Bool = false
     
     
 }
